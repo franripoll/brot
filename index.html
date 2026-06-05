@@ -196,6 +196,16 @@
   }
   .chat-save-btn:active { background: rgba(200,245,106,0.2); }
   .chat-save-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .speak-toggle {
+    width: 36px; height: 36px; border-radius: var(--r-sm);
+    border: 0.5px solid var(--border); background: var(--bg3);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0; transition: all 0.15s;
+    -webkit-user-select: none; user-select: none;
+  }
+  .speak-toggle svg { width: 16px; height: 16px; color: var(--text3); transition: color 0.15s; }
+  .speak-toggle.on { background: var(--accent-dim); border-color: rgba(200,245,106,0.3); }
+  .speak-toggle.on svg { color: var(--accent); }
 
   .chat-messages {
     flex: 1; overflow-y: auto;
@@ -218,6 +228,18 @@
   }
   .msg.brot .msg-bubble { background: var(--bg2); border: 0.5px solid var(--border); border-bottom-left-radius: 4px; }
   .msg.user .msg-bubble { background: var(--accent-dim); border: 0.5px solid rgba(200,245,106,0.2); border-bottom-right-radius: 4px; }
+  .msg-brot-wrap { display: flex; flex-direction: column; gap: 4px; max-width: 80%; }
+  .msg-speak-btn {
+    align-self: flex-start;
+    background: none; border: none; cursor: pointer;
+    color: var(--text3); padding: 2px 4px;
+    display: flex; align-items: center; gap: 4px;
+    font-size: 11px; font-family: var(--font-body);
+    transition: color 0.15s;
+    -webkit-user-select: none; user-select: none;
+  }
+  .msg-speak-btn:active, .msg-speak-btn.speaking { color: var(--accent); }
+  .msg-speak-btn svg { width: 13px; height: 13px; }
   .dot { display: inline-block; width: 6px; height: 6px; background: var(--text3); border-radius: 50%; margin: 0 2px; animation: bounce 1.2s infinite; }
   .dot:nth-child(2) { animation-delay: 0.2s; }
   .dot:nth-child(3) { animation-delay: 0.4s; }
@@ -272,6 +294,69 @@
   .ficha-section { margin-bottom: 16px; background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--r); padding: 16px; }
   .ficha-section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--accent2); font-weight: 500; margin-bottom: 8px; }
   .ficha-section-text { font-size: 14px; line-height: 1.7; font-weight: 300; }
+
+  /* Acordeones */
+  .acordeo {
+    margin-bottom: 12px;
+    background: var(--bg2); border: 0.5px solid var(--border);
+    border-radius: var(--r); overflow: hidden;
+  }
+  .acordeo-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px; cursor: pointer;
+    -webkit-user-select: none; user-select: none;
+    transition: background 0.15s;
+  }
+  .acordeo-header:active { background: var(--bg3); }
+  .acordeo-header-left { display: flex; align-items: center; gap: 10px; }
+  .acordeo-icon { font-size: 16px; }
+  .acordeo-title { font-family: var(--font-display); font-size: 16px; }
+  .acordeo-badge { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 20px; background: var(--accent-dim); color: var(--accent); }
+  .acordeo-chevron {
+    width: 16px; height: 16px; color: var(--text3);
+    transition: transform 0.2s; flex-shrink: 0;
+  }
+  .acordeo.open .acordeo-chevron { transform: rotate(180deg); }
+  .acordeo-body {
+    display: none; padding: 0 16px 16px;
+    border-top: 0.5px solid var(--border);
+  }
+  .acordeo.open .acordeo-body { display: block; }
+  .acordeo-body-inner { padding-top: 14px; }
+
+  /* Ficha fields dentro del acordeón */
+  .ficha-field { margin-bottom: 14px; }
+  .ficha-field:last-child { margin-bottom: 0; }
+  .ficha-field-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--accent2); font-weight: 500; margin-bottom: 6px; }
+  .ficha-field-text { font-size: 14px; line-height: 1.7; font-weight: 300; color: var(--text); }
+
+  /* Sintesi */
+  .sintesi-list { list-style: none; padding: 0; }
+  .sintesi-list li {
+    font-size: 14px; font-weight: 300; line-height: 1.6; color: var(--text);
+    padding: 6px 0; border-bottom: 0.5px solid var(--border);
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .sintesi-list li:last-child { border-bottom: none; }
+  .sintesi-dot { color: var(--accent); font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* Prompt CC */
+  .prompt-cc-box {
+    background: var(--bg3); border: 0.5px solid var(--border);
+    border-radius: var(--r-sm); padding: 14px;
+    font-family: monospace; font-size: 12px; line-height: 1.7;
+    color: var(--text2); white-space: pre-wrap; word-break: break-word;
+    margin-bottom: 12px; max-height: 300px; overflow-y: auto;
+  }
+  .copy-btn {
+    width: 100%; background: var(--bg3); border: 0.5px solid var(--border2);
+    color: var(--text2); border-radius: var(--r-sm); padding: 11px;
+    font-family: var(--font-body); font-size: 13px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    transition: all 0.15s;
+  }
+  .copy-btn:active, .copy-btn.copied { background: var(--accent-dim); color: var(--accent); border-color: rgba(200,245,106,0.2); }
+  .copy-btn svg { width: 14px; height: 14px; }
   .ficha-actions { padding: 16px 20px calc(28px + var(--safe-bottom)); display: flex; gap: 10px; }
   .ficha-btn { flex: 1; padding: 14px; border-radius: var(--r-sm); font-family: var(--font-body); font-size: 14px; font-weight: 500; cursor: pointer; text-align: center; transition: all 0.15s; }
   .ficha-btn-primary { background: var(--accent-dim); border: 0.5px solid rgba(200,245,106,0.2); color: var(--accent); }
@@ -389,6 +474,13 @@
         <div class="chat-name">Brot</div>
         <div class="chat-mode-lbl" id="chat-mode-label">Captura ràpida</div>
       </div>
+      <div class="speak-toggle" id="speak-toggle" onclick="toggleSpeak()" title="Veu de Brot">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+      </div>
       <button class="chat-save-btn" id="save-btn" onclick="saveCurrentIdea()" disabled>Guardar fitxa</button>
     </div>
     <div class="chat-messages" id="chat-messages"></div>
@@ -502,7 +594,21 @@ CÓMO PARTICIPAR
 
 FICHA FINAL
 Cuando el usuario pida guardar la ficha, o cuando la conversación esté madura, responde ÚNICAMENTE con un JSON con esta estructura exacta (sin markdown, sin texto adicional):
-{"titulo":"...","concepto":"...","problema":"...","audiencia":"...","funcion_clave":"...","riesgos":"...","proximos_pasos":"...","tags":["tag1","tag2"]}
+{
+  "titulo": "...",
+  "concepto": "...",
+  "problema": "...",
+  "audiencia": "...",
+  "funcion_clave": "...",
+  "riesgos": "...",
+  "proximos_pasos": "...",
+  "tags": ["tag1", "tag2"],
+  "sintesi": "• Idea principal: ...\n• Problema: ...\n• Solució: ...\n• Usuari: ...\n• Diferenciador: ...\n• Risc principal: ...\n• Primer pas: ...",
+  "prompt_cc": "Build a [type] app called [name].\n\n## Context\n[2-3 sentences describing the problem and target user]\n\n## Core Features\n1. [Feature 1]\n2. [Feature 2]\n3. [Feature 3]\n\n## Tech Stack\n- [Suggested stack based on the idea]\n\n## Key Constraints\n- [Important constraint or design decision]\n\n## What NOT to build (yet)\n- [Out of scope items]\n\nStart with the core feature first."
+}
+
+La sintesi debe ser un esquema en viñetas conciso en el idioma de la conversación.
+El prompt_cc debe estar en inglés, ser específico y accionable para Claude Code.
 
 TONO
 Cercano, directo, inteligente. Sin florituras. Como un cofundador técnico con quien tomas un café. Tu nombre es Brot.`;
@@ -620,8 +726,61 @@ function addMsg(role, content) {
   d.innerHTML = `<div class="msg-avatar ${role === 'user' ? 'user' : 'brot'}">${role === 'user' ? 'Tu' : 'B'}</div>
     <div class="msg-bubble">${fmtMsg(content)}</div>`;
   c.appendChild(d); c.scrollTop = c.scrollHeight;
+  if (role === 'assistant' && speakEnabled) speakText(content);
 }
 const fmtMsg = t => t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+
+let speakEnabled = false;
+function toggleSpeak() {
+  speakEnabled = !speakEnabled;
+  document.getElementById('speak-toggle').classList.toggle('on', speakEnabled);
+  if (!speakEnabled) {
+    window.speechSynthesis.cancel();
+    if (isRecording && recognition) recognition.stop();
+  }
+}
+
+function speakText(content) {
+  window.speechSynthesis.cancel();
+  const text = content.replace(/\*\*(.+?)\*\*/g, '$1').replace(/\[VOZ\]/g, '').replace(/[✅⚠️🌱🎙]/g, '').trim();
+  const caWords = /\b(però|també|molt|quan|tots|passos|riscos|fitxa|llesta|desar|generat|resum|aquest|aquesta|amb|els|les|del|dels)\b/i;
+  const lang = caWords.test(text) ? 'ca-ES' : 'es-ES';
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = lang; utter.rate = 0.95; utter.pitch = 1;
+  const voices = window.speechSynthesis.getVoices();
+  const match = voices.find(v => v.lang.startsWith(lang.split('-')[0]) && v.localService)
+    || voices.find(v => v.lang.startsWith(lang.split('-')[0]));
+  if (match) utter.voice = match;
+  utter.onend = () => {
+    if (speakEnabled && !isWaitingResponse) startMicAuto();
+  };
+  window.speechSynthesis.speak(utter);
+}
+
+function startMicAuto() {
+  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) return;
+  if (isRecording) return;
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.lang = 'ca-ES'; recognition.continuous = false; recognition.interimResults = false;
+  recognition.onstart = () => {
+    isRecording = true;
+    document.getElementById('mic-btn').classList.add('recording');
+  };
+  recognition.onresult = e => {
+    const transcript = e.results[0][0].transcript;
+    sendMessage(transcript, true);
+  };
+  recognition.onend = () => {
+    isRecording = false;
+    document.getElementById('mic-btn').classList.remove('recording');
+  };
+  recognition.onerror = () => {
+    isRecording = false;
+    document.getElementById('mic-btn').classList.remove('recording');
+  };
+  recognition.start();
+}
 
 function addTyping() {
   const c = document.getElementById('chat-messages');
@@ -661,7 +820,7 @@ async function sendMessage(text, isVoice) {
         'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 1000,
         system: SYSTEM_PROMPT,
         messages: currentSession.messages
@@ -738,30 +897,97 @@ async function openFicha(id) {
   document.getElementById('ficha-title-display').textContent = idea.titulo || 'Idea sense títol';
   const content = document.getElementById('ficha-content');
   content.innerHTML = '';
-  if (idea.fichaData) {
-    const f = idea.fichaData;
-    [['Concepte','concepto'],['Problema que resol','problema'],['Audiència objectiu','audiencia'],
-     ['Funcionalitat clau','funcion_clave'],['Riscos i punts dèbils','riesgos'],['Pròxims passos','proximos_pasos']
-    ].forEach(([label, key]) => {
-      if (!f[key]) return;
-      const s = document.createElement('div'); s.className = 'ficha-section';
-      s.innerHTML = `<div class="ficha-section-label">${label}</div><div class="ficha-section-text">${f[key]}</div>`;
-      content.appendChild(s);
-    });
-    if (f.tags?.length) {
-      const s = document.createElement('div'); s.className = 'ficha-section';
-      s.innerHTML = `<div class="ficha-section-label">Tags</div><div>${f.tags.map(t=>`<span class="tag-pill">${t}</span>`).join('')}</div>`;
-      content.appendChild(s);
-    }
-  } else {
+
+  if (!idea.fichaData) {
     const s = document.createElement('div'); s.className = 'ficha-section';
     s.innerHTML = `<div class="ficha-section-label">Estat</div><div class="ficha-section-text">Sessió en curs, fitxa encara no generada.</div>`;
     content.appendChild(s);
+    showScreen('ficha'); return;
   }
-  const ds = document.createElement('div'); ds.className = 'ficha-section';
-  ds.innerHTML = `<div class="ficha-section-label">Data</div><div class="ficha-section-text">${new Date(idea.createdAt).toLocaleDateString('ca-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div>`;
-  content.appendChild(ds);
+
+  const f = idea.fichaData;
+
+  // ── ACORDEÓ 1: Fitxa ──
+  const a1 = makeAcordeo('📋', 'Fitxa', null, true);
+  const fields = [
+    ['Concepte', f.concepto], ['Problema que resol', f.problema],
+    ['Audiència objectiu', f.audiencia], ['Funcionalitat clau', f.funcion_clave],
+    ['Riscos i punts dèbils', f.riesgos], ['Pròxims passos', f.proximos_pasos]
+  ];
+  let fieldsHtml = fields.filter(([,v]) => v).map(([l, v]) =>
+    `<div class="ficha-field"><div class="ficha-field-label">${l}</div><div class="ficha-field-text">${v}</div></div>`
+  ).join('');
+  if (f.tags?.length) {
+    fieldsHtml += `<div class="ficha-field"><div class="ficha-field-label">Tags</div><div>${f.tags.map(t=>`<span class="tag-pill">${t}</span>`).join('')}</div></div>`;
+  }
+  const date = new Date(idea.createdAt).toLocaleDateString('ca-ES', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  fieldsHtml += `<div class="ficha-field"><div class="ficha-field-label">Data</div><div class="ficha-field-text">${date}</div></div>`;
+  a1.querySelector('.acordeo-body-inner').innerHTML = fieldsHtml;
+  content.appendChild(a1);
+
+  // ── ACORDEÓ 2: Síntesi ──
+  const a2 = makeAcordeo('🗺️', 'Síntesi', null, false);
+  if (f.sintesi) {
+    const lines = f.sintesi.split('\n').filter(l => l.trim());
+    const listHtml = '<ul class="sintesi-list">' + lines.map(l => {
+      const clean = l.replace(/^[•\-\*]\s*/, '');
+      return `<li><span class="sintesi-dot">•</span><span>${clean}</span></li>`;
+    }).join('') + '</ul>';
+    a2.querySelector('.acordeo-body-inner').innerHTML = listHtml;
+  } else {
+    a2.querySelector('.acordeo-body-inner').innerHTML = `<div class="ficha-field-text" style="color:var(--text3);font-size:13px;">Síntesi no disponible. Regenera la fitxa per obtenir-la.</div>`;
+  }
+  content.appendChild(a2);
+
+  // ── ACORDEÓ 3: Prompt Claude Code ──
+  const a3 = makeAcordeo('⚡', 'Prompt per a Claude Code', 'EN', false);
+  if (f.prompt_cc) {
+    const promptHtml = `
+      <div class="prompt-cc-box" id="prompt-cc-text">${escHtml(f.prompt_cc)}</div>
+      <button class="copy-btn" id="copy-btn" onclick="copyPrompt()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copiar prompt
+      </button>`;
+    a3.querySelector('.acordeo-body-inner').innerHTML = promptHtml;
+  } else {
+    a3.querySelector('.acordeo-body-inner').innerHTML = `<div class="ficha-field-text" style="color:var(--text3);font-size:13px;">Prompt no disponible. Regenera la fitxa per obtenir-lo.</div>`;
+  }
+  content.appendChild(a3);
+
   showScreen('ficha');
+}
+
+function makeAcordeo(icon, title, badge, open) {
+  const div = document.createElement('div');
+  div.className = 'acordeo' + (open ? ' open' : '');
+  div.innerHTML = `
+    <div class="acordeo-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="acordeo-header-left">
+        <span class="acordeo-icon">${icon}</span>
+        <span class="acordeo-title">${title}</span>
+        ${badge ? `<span class="acordeo-badge">${badge}</span>` : ''}
+      </div>
+      <svg class="acordeo-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acordeo-body"><div class="acordeo-body-inner"></div></div>`;
+  return div;
+}
+
+function escHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copyPrompt() {
+  const text = document.getElementById('prompt-cc-text')?.innerText || '';
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copiat!`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar prompt`;
+    }, 2000);
+  });
 }
 
 function openChatFromFicha() {
