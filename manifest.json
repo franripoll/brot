@@ -2,7 +2,7 @@
   "name": "Brot — les teues idees",
   "short_name": "Brot",
   "description": "El teu assistent de brainstorming per a idees d'apps",
-  "start_url": "/",
+  "start_url": "/brot/",
   "display": "standalone",
   "background_color": "#0e0e0c",
   "theme_color": "#0e0e0c",
