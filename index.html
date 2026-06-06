@@ -410,6 +410,52 @@
   .key-status-pill.no-key { background: rgba(255,107,107,0.1); color: var(--danger); border: 0.5px solid rgba(255,107,107,0.2); }
   .key-status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
+  /* Model selector */
+  .model-provider { margin-bottom: 16px; }
+  .model-provider-label {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px;
+    color: var(--text3); font-weight: 500; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .model-provider-badge {
+    font-size: 9px; padding: 1px 6px; border-radius: 10px;
+    background: rgba(200,245,106,0.1); color: var(--accent);
+    border: 0.5px solid rgba(200,245,106,0.2); font-weight: 500;
+  }
+  .model-option {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 14px; margin-bottom: 6px;
+    background: var(--bg2); border: 0.5px solid var(--border);
+    border-radius: var(--r-sm); cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    -webkit-user-select: none; user-select: none;
+  }
+  .model-option:active { background: var(--bg3); }
+  .model-option.active { border-color: rgba(200,245,106,0.4); background: var(--accent-dim2); }
+  .model-option.disabled { opacity: 0.35; pointer-events: none; }
+  .model-radio {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 1.5px solid var(--border2); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.15s;
+  }
+  .model-option.active .model-radio { border-color: var(--accent); }
+  .model-radio-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); display: none;
+  }
+  .model-option.active .model-radio-dot { display: block; }
+  .model-info { flex: 1; min-width: 0; }
+  .model-name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .model-desc { font-size: 11px; color: var(--text3); margin-top: 2px; font-weight: 300; }
+  .model-tag {
+    font-size: 10px; padding: 2px 7px; border-radius: 10px; flex-shrink: 0;
+    font-weight: 500;
+  }
+  .model-tag-free { background: rgba(200,245,106,0.1); color: var(--accent); border: 0.5px solid rgba(200,245,106,0.2); }
+  .model-tag-paid { background: rgba(255,255,255,0.05); color: var(--text3); border: 0.5px solid var(--border); }
+  .model-locked { font-size: 11px; color: var(--text3); font-style: italic; }
+
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
@@ -525,28 +571,116 @@
       <span style="font-family:var(--font-display);font-size:18px;">Ajustos</span>
     </div>
     <div class="settings-content">
-      <div class="settings-section-title">Clau API</div>
-      <div class="settings-section-sub">Brot utilitza la API d'Anthropic per a les converses. La clau es guarda únicament en aquest dispositiu i mai surt d'ell.</div>
-      <div id="key-status-pill" class="key-status-pill no-key">
-        <div class="key-status-dot"></div>
-        <span id="key-status-text">Sense clau configurada</span>
+
+      <!-- MODEL SELECTOR -->
+      <div class="settings-section-title">Model d'IA</div>
+      <div class="settings-section-sub">Tria el model que vol usar Brot. Només apareixen actius els que tenen clau configurada.</div>
+
+      <div class="model-provider">
+        <div class="model-provider-label">Anthropic</div>
+        <div class="model-option" id="m-haiku" onclick="selectModel('anthropic','claude-haiku-4-5-20251001')">
+          <div class="model-radio"><div class="model-radio-dot"></div></div>
+          <div class="model-info">
+            <div class="model-name">claude-haiku-4-5</div>
+            <div class="model-desc">Ràpid i econòmic</div>
+          </div>
+          <span class="model-tag model-tag-paid">€</span>
+        </div>
+        <div class="model-option" id="m-sonnet" onclick="selectModel('anthropic','claude-sonnet-4-6')">
+          <div class="model-radio"><div class="model-radio-dot"></div></div>
+          <div class="model-info">
+            <div class="model-name">claude-sonnet-4-6</div>
+            <div class="model-desc">Més intel·ligent</div>
+          </div>
+          <span class="model-tag model-tag-paid">€€</span>
+        </div>
       </div>
-      <div class="settings-field-label">API Key d'Anthropic</div>
+
+      <div class="model-provider">
+        <div class="model-provider-label">Groq <span class="model-provider-badge">Gratuït</span></div>
+        <div class="model-option" id="m-llama" onclick="selectModel('groq','llama-3.3-70b-versatile')">
+          <div class="model-radio"><div class="model-radio-dot"></div></div>
+          <div class="model-info">
+            <div class="model-name">llama-3.3-70b</div>
+            <div class="model-desc">Potent i gratuït</div>
+          </div>
+          <span class="model-tag model-tag-free">Free</span>
+        </div>
+        <div class="model-option" id="m-mixtral" onclick="selectModel('groq','mixtral-8x7b-32768')">
+          <div class="model-radio"><div class="model-radio-dot"></div></div>
+          <div class="model-info">
+            <div class="model-name">mixtral-8x7b</div>
+            <div class="model-desc">Ràpid i multilingüe</div>
+          </div>
+          <span class="model-tag model-tag-free">Free</span>
+        </div>
+      </div>
+
+      <div class="model-provider">
+        <div class="model-provider-label">Google <span class="model-provider-badge">Gratuït</span></div>
+        <div class="model-option" id="m-flash" onclick="selectModel('google','gemini-1.5-flash')">
+          <div class="model-radio"><div class="model-radio-dot"></div></div>
+          <div class="model-info">
+            <div class="model-name">gemini-1.5-flash</div>
+            <div class="model-desc">Ràpid i gratuït</div>
+          </div>
+          <span class="model-tag model-tag-free">Free</span>
+        </div>
+        <div class="model-option" id="m-pro" onclick="selectModel('google','gemini-1.5-pro')">
+          <div class="model-radio"><div class="model-radio-dot"></div></div>
+          <div class="model-info">
+            <div class="model-name">gemini-1.5-pro</div>
+            <div class="model-desc">Més capacitat</div>
+          </div>
+          <span class="model-tag model-tag-paid">€</span>
+        </div>
+      </div>
+
+      <hr class="settings-divider">
+
+      <!-- API KEYS -->
+      <div class="settings-section-title">Claus API</div>
+      <div class="settings-section-sub">Configura les claus dels proveïdors que vulgues usar. Es guarden únicament en aquest dispositiu.</div>
+
+      <!-- Anthropic -->
+      <div class="settings-field-label">Anthropic</div>
       <div class="settings-input-wrap">
-        <input type="password" class="settings-input" id="api-key-input"
-          placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false" oninput="onKeyInput()"/>
-        <button class="toggle-vis" onclick="toggleKeyVisibility()" title="Mostrar/ocultar">
-          <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-          </svg>
+        <input type="password" class="settings-input" id="key-anthropic" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false"/>
+        <button class="toggle-vis" onclick="toggleVis('key-anthropic','eye-anthropic')">
+          <svg id="eye-anthropic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
       </div>
       <div class="settings-hint">
-        Obtén la teua clau a <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com</a>.<br>
-        La clau es guarda en localStorage i s'envia directament a api.anthropic.com. No passa per cap servidor intermediari.
+        <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com</a>
       </div>
-      <button class="settings-save-btn" id="settings-save-btn" onclick="saveApiKey()">Guardar clau</button>
+
+      <!-- Groq -->
+      <div class="settings-field-label">Groq</div>
+      <div class="settings-input-wrap">
+        <input type="password" class="settings-input" id="key-groq" placeholder="gsk_..." autocomplete="off" spellcheck="false"/>
+        <button class="toggle-vis" onclick="toggleVis('key-groq','eye-groq')">
+          <svg id="eye-groq" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="settings-hint">
+        <a href="https://console.groq.com/keys" target="_blank">console.groq.com</a> — gratuït
+      </div>
+
+      <!-- Google -->
+      <div class="settings-field-label">Google Gemini</div>
+      <div class="settings-input-wrap">
+        <input type="password" class="settings-input" id="key-google" placeholder="AIza..." autocomplete="off" spellcheck="false"/>
+        <button class="toggle-vis" onclick="toggleVis('key-google','eye-google')">
+          <svg id="eye-google" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="settings-hint">
+        <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a> — pla gratuït disponible
+      </div>
+
+      <button class="settings-save-btn" onclick="saveAllKeys()">Guardar claus</button>
       <div class="settings-status" id="settings-status"></div>
+
       <hr class="settings-divider">
       <div class="settings-danger-title">Zona de perill</div>
       <button class="settings-danger-btn" onclick="clearAllData()">Eliminar totes les idees i dades</button>
@@ -811,24 +945,7 @@ async function sendMessage(text, isVoice) {
   currentSession.messages.push({ role: 'user', content: isVoice ? `[VOZ] ${content}` : content });
   isWaitingResponse = true; addTyping();
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': getApiKey(),
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1000,
-        system: SYSTEM_PROMPT,
-        messages: currentSession.messages
-      })
-    });
-    const data = await resp.json();
-    if (data.error) throw new Error(data.error.message);
-    const reply = data.content?.[0]?.text || '';
+    const reply = await callAI(currentSession.messages);
     removeTyping();
     const trimmed = reply.trim();
     if (trimmed.startsWith('{') && trimmed.includes('"titulo"')) {
@@ -847,6 +964,66 @@ async function sendMessage(text, isVoice) {
     addMsg('assistant', `⚠️ Error: ${err.message || 'No s\'ha pogut connectar.'}`);
   }
   isWaitingResponse = false;
+}
+
+async function callAI(messages) {
+  const { provider, model } = getActiveModel();
+  const key = getKey(provider);
+  if (!key) throw new Error('No hi ha clau API configurada per a aquest proveïdor.');
+
+  if (provider === 'anthropic') {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({ model, max_tokens: 1000, system: SYSTEM_PROMPT, messages })
+    });
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error.message);
+    return data.content?.[0]?.text || '';
+  }
+
+  if (provider === 'groq') {
+    const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+      body: JSON.stringify({
+        model, max_tokens: 1000,
+        messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages]
+      })
+    });
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error.message);
+    return data.choices?.[0]?.message?.content || '';
+  }
+
+  if (provider === 'google') {
+    const gcMessages = messages.map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }]
+    }));
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents: gcMessages,
+          generationConfig: { maxOutputTokens: 1000 }
+        })
+      }
+    );
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error.message);
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  }
+
+  throw new Error('Proveïdor desconegut.');
 }
 
 async function saveCurrentIdea() {
@@ -1007,53 +1184,84 @@ async function deleteCurrentIdea() {
 }
 
 // ── Settings ──
+const MODELS = {
+  'm-haiku':   { provider: 'anthropic', model: 'claude-haiku-4-5-20251001' },
+  'm-sonnet':  { provider: 'anthropic', model: 'claude-sonnet-4-6' },
+  'm-llama':   { provider: 'groq',      model: 'llama-3.3-70b-versatile' },
+  'm-mixtral': { provider: 'groq',      model: 'mixtral-8x7b-32768' },
+  'm-flash':   { provider: 'google',    model: 'gemini-1.5-flash' },
+  'm-pro':     { provider: 'google',    model: 'gemini-1.5-pro' },
+};
+
+function getKey(provider) { return localStorage.getItem(`brot_key_${provider}`) || ''; }
+function getApiKey() { return getKey('anthropic'); } // compatibilitat enrere
+function hasApiKey() { return !!(getKey('anthropic') || getKey('groq') || getKey('google')); }
+function getActiveModelId() { return localStorage.getItem('brot_model') || 'm-haiku'; }
+function getActiveModel() { return MODELS[getActiveModelId()] || MODELS['m-haiku']; }
+
 function loadSettingsScreen() {
-  const key = getApiKey();
-  const pill = document.getElementById('key-status-pill');
-  const pillText = document.getElementById('key-status-text');
-  const input = document.getElementById('api-key-input');
-  if (key) {
-    pill.className = 'key-status-pill has-key';
-    pillText.textContent = 'Clau configurada ✓';
-    input.value = key;
-  } else {
-    pill.className = 'key-status-pill no-key';
-    pillText.textContent = 'Sense clau configurada';
-    input.value = '';
-  }
+  // Omplir camps de clau
+  ['anthropic','groq','google'].forEach(p => {
+    const inp = document.getElementById('key-' + p);
+    if (inp) inp.value = getKey(p);
+  });
+  // Actualitzar selector de models
+  updateModelSelector();
   document.getElementById('settings-status').textContent = '';
 }
 
-function onKeyInput() {
-  document.getElementById('settings-save-btn').disabled = !document.getElementById('api-key-input').value.trim();
+function updateModelSelector() {
+  const activeId = getActiveModelId();
+  Object.keys(MODELS).forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const provider = MODELS[id].provider;
+    const hasKey = !!getKey(provider);
+    el.classList.toggle('active', id === activeId);
+    el.classList.toggle('disabled', !hasKey);
+  });
 }
 
-function toggleKeyVisibility() {
-  const input = document.getElementById('api-key-input');
+function selectModel(provider, model) {
+  if (!getKey(provider)) return;
+  const id = Object.keys(MODELS).find(k => MODELS[k].provider === provider && MODELS[k].model === model);
+  if (!id) return;
+  localStorage.setItem('brot_model', id);
+  updateModelSelector();
+}
+
+function toggleVis(inputId, iconId) {
+  const input = document.getElementById(inputId);
   const isPass = input.type === 'password';
   input.type = isPass ? 'text' : 'password';
-  document.getElementById('eye-icon').innerHTML = isPass
+  document.getElementById(iconId).innerHTML = isPass
     ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>'
     : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
 }
 
-function saveApiKey() {
-  const key = document.getElementById('api-key-input').value.trim();
+function saveAllKeys() {
   const status = document.getElementById('settings-status');
-  if (!key.startsWith('sk-ant-')) {
-    status.textContent = 'La clau ha de començar per sk-ant-';
-    status.className = 'settings-status err'; return;
+  ['anthropic','groq','google'].forEach(p => {
+    const val = document.getElementById('key-' + p)?.value.trim() || '';
+    if (val) localStorage.setItem(`brot_key_${p}`, val);
+    else localStorage.removeItem(`brot_key_${p}`);
+  });
+  updateModelSelector();
+  // Si el model actiu ja no té clau, canviar al primer disponible
+  const active = getActiveModel();
+  if (!getKey(active.provider)) {
+    const fallback = Object.keys(MODELS).find(k => !!getKey(MODELS[k].provider));
+    if (fallback) localStorage.setItem('brot_model', fallback);
   }
-  localStorage.setItem('brot_api_key', key);
-  status.textContent = '✓ Clau guardada correctament';
+  status.textContent = '✓ Claus guardades';
   status.className = 'settings-status ok';
-  loadSettingsScreen();
   setTimeout(() => status.textContent = '', 3000);
 }
 
 async function clearAllData() {
-  if (!confirm('Segur? S\'eliminaran totes les idees i la clau API.')) return;
-  localStorage.removeItem('brot_api_key');
+  if (!confirm('Segur? S\'eliminaran totes les idees i les claus API.')) return;
+  ['anthropic','groq','google'].forEach(p => localStorage.removeItem(`brot_key_${p}`));
+  localStorage.removeItem('brot_model');
   await new Promise((res, rej) => {
     const tx = db.transaction('ideas', 'readwrite');
     const req = tx.objectStore('ideas').clear();
